@@ -240,8 +240,9 @@ public class addSession extends javax.swing.JFrame {
     }
     
     private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
-        consecutiveParallelOverlap goMain = new consecutiveParallelOverlap();
-        goMain.setVisible(true);
+        consecutiveParallelOverlap tab = new consecutiveParallelOverlap();
+        tab.TabbedPane.setSelectedIndex(0);
+        tab.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnBackActionPerformed
 
