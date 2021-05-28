@@ -9,6 +9,7 @@ import forConnection.connect;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import javax.swing.JOptionPane;
 import javax.swing.RowFilter;
 import javax.swing.table.DefaultTableModel;
@@ -27,6 +28,7 @@ public class nonOverlapping extends javax.swing.JFrame {
     
     public nonOverlapping() {
         initComponents();
+        getData();
     }
 
     /**
@@ -56,11 +58,11 @@ public class nonOverlapping extends javax.swing.JFrame {
 
             },
             new String [] {
-                "ID", "Lecturer_01", "Lecturer_02", "Subject Code", "Subject Name", "Tag", "GroupId", "Room"
+                "ID", "Lecturer", "SubjectCode", "SubjectName", "Tag", "GroupId", "Room"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false, false
+                false, false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -237,6 +239,20 @@ public class nonOverlapping extends javax.swing.JFrame {
                 tableOfNonOverlap.setModel(DbUtils.resultSetToTableModel(rs));
             }catch(Exception ex){
             
+            }
+    }
+    public void getData(){
+        try {
+                conn = cObj.getConnection(); //---get connection---
+                String q = " select * from  non_overlap ";
+                pst = conn.prepareStatement(q);
+                rs = pst.executeQuery();
+
+                tableOfNonOverlap.setModel(DbUtils.resultSetToTableModel(rs));
+            
+            }catch (SQLException ex) {
+                System.err.println("Go to an exception!!!");                              
+                JOptionPane.showConfirmDialog(null, ex.getMessage());
             }
     }
     /**

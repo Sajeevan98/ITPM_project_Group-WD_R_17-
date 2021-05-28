@@ -157,10 +157,9 @@
                     <Component class="javax.swing.JTable" name="tableOfMain_01">
                       <Properties>
                         <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                          <Table columnCount="8" rowCount="0">
+                          <Table columnCount="7" rowCount="0">
                             <Column editable="false" title="ID" type="java.lang.Object"/>
-                            <Column editable="false" title="Lecturer_1" type="java.lang.Object"/>
-                            <Column editable="false" title="Lecturer_2" type="java.lang.Object"/>
+                            <Column editable="false" title="Lecturers" type="java.lang.Object"/>
                             <Column editable="false" title="SubjectCode" type="java.lang.Object"/>
                             <Column editable="false" title="SubjectName" type="java.lang.Object"/>
                             <Column editable="false" title="Tag" type="java.lang.Object"/>
@@ -501,10 +500,9 @@
                     <Component class="javax.swing.JTable" name="tableOfMain_03">
                       <Properties>
                         <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                          <Table columnCount="8" rowCount="0">
+                          <Table columnCount="7" rowCount="0">
                             <Column editable="false" title="ID" type="java.lang.Object"/>
-                            <Column editable="false" title="Lecturer_1" type="java.lang.Object"/>
-                            <Column editable="false" title="Lecturer_2" type="java.lang.Object"/>
+                            <Column editable="false" title="Lecturer" type="java.lang.Object"/>
                             <Column editable="false" title="SubjectCode" type="java.lang.Object"/>
                             <Column editable="false" title="SubjectName" type="java.lang.Object"/>
                             <Column editable="false" title="Tag" type="java.lang.Object"/>

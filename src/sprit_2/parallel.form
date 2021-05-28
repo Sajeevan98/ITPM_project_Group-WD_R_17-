@@ -104,8 +104,8 @@
                   <Table columnCount="9" rowCount="0">
                     <Column editable="false" title="ID" type="java.lang.Object"/>
                     <Column editable="false" title="Lecturer" type="java.lang.Object"/>
-                    <Column editable="false" title="Subject Code" type="java.lang.Object"/>
-                    <Column editable="false" title="Subject Name" type="java.lang.Object"/>
+                    <Column editable="false" title="SubjectCode" type="java.lang.Object"/>
+                    <Column editable="false" title="SubjectName" type="java.lang.Object"/>
                     <Column editable="false" title="Tag" type="java.lang.Object"/>
                     <Column editable="false" title="GroupId" type="java.lang.Object"/>
                     <Column editable="false" title="Room" type="java.lang.Object"/>

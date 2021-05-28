@@ -11,6 +11,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.RowFilter;
 import javax.swing.table.DefaultTableModel;
@@ -23,15 +25,15 @@ import net.proteanit.sql.DbUtils;
  * @author Sajee
  */
 public class consecutiveParallelOverlap extends javax.swing.JFrame {
-        PreparedStatement pst,pst2;
-        ResultSet rs,rs2,rs3,rs4;
+        PreparedStatement pst;
+        ResultSet rs,rs2,rs3;
         connect cObj = new connect();//---create object to connect class---
         Connection conn;
         
     public consecutiveParallelOverlap() {
         initComponents();
         getData();
-       
+        getData2();
     }
 
     /**
@@ -89,11 +91,11 @@ public class consecutiveParallelOverlap extends javax.swing.JFrame {
 
             },
             new String [] {
-                "ID", "Lecturer_1", "Lecturer_2", "SubjectCode", "SubjectName", "Tag", "GroupId", "Room"
+                "ID", "Lecturers", "SubjectCode", "SubjectName", "Tag", "GroupId", "Room"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false, false
+                false, false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -293,11 +295,11 @@ public class consecutiveParallelOverlap extends javax.swing.JFrame {
 
             },
             new String [] {
-                "ID", "Lecturer_1", "Lecturer_2", "SubjectCode", "SubjectName", "Tag", "GroupId", "Room"
+                "ID", "Lecturer", "SubjectCode", "SubjectName", "Tag", "GroupId", "Room"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false, false
+                false, false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -404,58 +406,11 @@ public class consecutiveParallelOverlap extends javax.swing.JFrame {
         parel.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnViewForParalllelActionPerformed
-    //----Start - Add Parallel Sessions----
+    //----Add Parallel Button----
     private void btnParallelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnParallelActionPerformed
-        try {
-                conn = cObj.getConnection();//---get connection---
-                TableModel table1 = tableOfMain_02.getModel();
-                int [] Index = tableOfMain_02.getSelectedRows();
-                Object [] column = new Object[8];
-                            
-                if(tableOfMain_02.getSelectedRowCount()== 0)
-                    JOptionPane.showMessageDialog(null,"Please select Row.");
-                else 
-                {   
-                    if(tableOfMain_02.getSelectedRowCount() > 0)
-                    {
-                        //---start for loop---
-                        int i=0;
-                        for(i=0; i<Index.length; i++)
-                        {
-                            column[0] = table1.getValueAt(Index[i], 0);
-                            column[1] = table1.getValueAt(Index[i], 1);
-                            column[2] = table1.getValueAt(Index[i], 2);
-                            column[3] = table1.getValueAt(Index[i], 3);
-                            column[4] = table1.getValueAt(Index[i], 4);
-                            column[5] = table1.getValueAt(Index[i], 5);
-                            column[6] = table1.getValueAt(Index[i], 6);
-                            column[7] = table1.getValueAt(Index[i], 7);
-                            
-                            String insertRows= " insert into parallel(Lecturer, SubjectCode, SubjectName, Tag, GroupId, Room, StartTime, Day, Duration)" +" values(?,?,?,?,?,?,?,?,?)";
-                            pst = conn.prepareStatement(insertRows);
-                            
-                            pst.setString(1,  column[1].toString());
-                            pst.setString(2,  column[2].toString());
-                            pst.setString(3,  column[3].toString());
-                            pst.setString(4,  column[4].toString());
-                            pst.setString(5,  column[5].toString());
-                            pst.setString(6,  column[6].toString());
-                            pst.setString(7,  column[7].toString());
-                            pst.setString(8, (String) cBoxTime.getSelectedItem());
-                            pst.setString(9, (String) cBoxDay.getSelectedItem());
-                            pst.execute(); 
-                            JOptionPane.showMessageDialog(null,"Consecutive Session Successfully Added.");
-                        }
-                        conn.close();
-                    }
-                }
-            }catch(Exception ex){
-                
-                
-            }
+        ParallelFun(); //call method...
     }//GEN-LAST:event_btnParallelActionPerformed
-    //----End - Add Parallel Sessions----
-    
+        
     private void txtSerach1KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSerach1KeyReleased
         // TODO add your handling code here:
     }//GEN-LAST:event_txtSerach1KeyReleased
@@ -471,12 +426,102 @@ public class consecutiveParallelOverlap extends javax.swing.JFrame {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         addSession  obj = new addSession();
         obj.setVisible(true);
-        this.dispose();
+        this.dispose();  
     }//GEN-LAST:event_jButton2ActionPerformed
     
-    //----Start - Add Consecutive Sessions----
+    // ---Add Consecutive Button---
     private void btnAddSessionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddSessionActionPerformed
+        addConsecutiveFun(); //call method...
+
+    }//GEN-LAST:event_btnAddSessionActionPerformed
+       
+    private void cBoxDayInputMethodTextChanged(java.awt.event.InputMethodEvent evt) {//GEN-FIRST:event_cBoxDayInputMethodTextChanged
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cBoxDayInputMethodTextChanged
+
+    private void TabbedPaneMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TabbedPaneMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_TabbedPaneMouseClicked
+
+    private void btnViewForParalllel1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewForParalllel1ActionPerformed
+        nonOverlapping nonOverlap = new nonOverlapping();
+        nonOverlap.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_btnViewForParalllel1ActionPerformed
+    
+    //---Non-Overlapping Button---
+    private void btnNonOverlapActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNonOverlapActionPerformed
+        
+            switch (nonOverlapFun()) 
+            {
+                case "added":
+                    JOptionPane.showMessageDialog(null,"Non-Overlap Session Successfully Added.");
+                    break;
+                case "replaced":
+                    JOptionPane.showMessageDialog(null,"Successfully Replaced.");
+                    break;
+                case "terminated":
+                    JOptionPane.showMessageDialog(null,"terminated!!!");
+                    break;
+                default:
+                    break;
+            }
+         
+    }//GEN-LAST:event_btnNonOverlapActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        homeForStudentAndTag home = new homeForStudentAndTag();
+        home.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_jButton1ActionPerformed
+    
+    //----get data for Table from sprint_2 table----
+    public void getData()
+    {
         try {
+            
+            conn = cObj.getConnection();//---get connection---            
+            String q_1 = " select * from sprint_2 "; //---Query-01---                       
+            pst = conn.prepareStatement(q_1); //---Execute Query---
+                 
+            rs = pst.executeQuery();
+                tableOfMain_01.setModel(DbUtils.resultSetToTableModel(rs));//---tableOfMain_01---
+            rs2 = pst.executeQuery();
+                tableOfMain_02.setModel(DbUtils.resultSetToTableModel(rs2)); //---tableOfMain_02---
+            rs3 = pst.executeQuery();
+                tableOfMain_03.setModel(DbUtils.resultSetToTableModel(rs3)); //---tableOfMain_03---    
+           
+            conn.close();  
+        }catch (SQLException ex) {
+            System.err.println("Go to an exception!!!");                              
+            JOptionPane.showConfirmDialog(null, ex.getMessage());
+        }
+        
+    }
+    
+    //----get data for comboBox from day_time table----
+    public void getData2()
+    {
+       try {
+                conn = cObj.getConnection();//---get connection---
+                String q_2 = " select * from day_time ";
+                pst = conn.prepareStatement(q_2); //---Execute Query---
+             
+                rs = pst.executeQuery(); //---comboBox---
+                while(rs.next())
+                {
+                    cBoxDay.addItem(rs.getString("day"));
+                    cBoxTime.addItem(rs.getString("time"));
+                }
+                conn.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(consecutiveParallelOverlap.class.getName()).log(Level.SEVERE, null, ex);
+            }
+    }
+    
+    //----Start - Add Consecutive Sessions----
+    public void addConsecutiveFun(){
+         try {
                 String lec_1[] = new String[2], lec_2[]= new String[2],  tag[]= new String[2], sCode[]= new String[2];
                 conn = cObj.getConnection(); //---get connection---
                 TableModel table1 = tableOfMain_01.getModel();
@@ -510,7 +555,7 @@ public class consecutiveParallelOverlap extends javax.swing.JFrame {
                         }//---for loop end--- 
                         String insertRows= " insert into consecutive(Lecturers, SubjectCode, SubjectName, Tag, GroupId, Room )" +" values(?,?,?,?,?,?)";
                         pst = conn.prepareStatement(insertRows);
-                        System.out.println(tag[0]+" - "+tag[1]);//---for check-->(Which Tags is exists)---
+                        System.out.println(tag[0]+" - "+tag[1]);//---for checking-->(Which Tags is exists)---
                         if( tag[0].equals("LECTURE") && tag[1].equals("TUTORIAL") && sCode[0].equals(sCode[1]))//---Filter Tags---&---SubjectCode Check---
                         {   
                             pst.setString(1,  lec_1[0]+", "+lec_2[1]);//---Setting the names of both lecturers in the same column---
@@ -544,7 +589,7 @@ public class consecutiveParallelOverlap extends javax.swing.JFrame {
                     }
                     else //---When Select More than 2 Rows OR 1 row.---
                     {
-                        JOptionPane.showMessageDialog(null,"Warning!!!, Consecutive sessions consider only LECTURE and TUTORIAL. So, you need to select  2 rows Only...");
+                        JOptionPane.showMessageDialog(null,"Warning!!!, Consecutive sessions consider only 'LECTURE and TUTORIAL'. So, you need to select  2 rows Only...");
                     }
                     //---close connection---
                     conn.close();
@@ -553,26 +598,92 @@ public class consecutiveParallelOverlap extends javax.swing.JFrame {
             } catch (SQLException ex) {
                 
         }
-
-    }//GEN-LAST:event_btnAddSessionActionPerformed
-    //----End - Add Consecutive Sessions----
+    }//----End - Add Consecutive Sessions----
     
-    private void cBoxDayInputMethodTextChanged(java.awt.event.InputMethodEvent evt) {//GEN-FIRST:event_cBoxDayInputMethodTextChanged
-        // TODO add your handling code here:
-    }//GEN-LAST:event_cBoxDayInputMethodTextChanged
+    //----Start - Add Parallel Sessions----
+    public void ParallelFun(){
+        try {
+                conn = cObj.getConnection(); //---get connection---
+                TableModel table1 = tableOfMain_02.getModel();
+                int [] Index = tableOfMain_02.getSelectedRows();
+                Object [] column = new Object[8];
+                            
+                if(tableOfMain_02.getSelectedRowCount()== 0) //---When Click "Add-Button" Without Selected Rows--
+                    JOptionPane.showMessageDialog(null,"Please select Row.");
+                else 
+                {   
+                    if(tableOfMain_02.getSelectedRowCount() >= 2)
+                    {   
+                        if(cBoxDay.getSelectedItem().toString().isEmpty() || cBoxDay.getSelectedItem().toString().equals("---select day---") )
+                            JOptionPane.showMessageDialog(null,"Please Select Day.");
+                        else if(cBoxTime.getSelectedItem().toString().isEmpty() || cBoxTime.getSelectedItem().toString().equals("---select time---"))
+                            JOptionPane.showMessageDialog(null,"Please Select Time.");
+                        else
+                        {
+                            //---start for loop---
+                            for(int i=0; i<Index.length; i++)
+                            {
+                                column[0] = table1.getValueAt(Index[i], 0);
+                                column[1] = table1.getValueAt(Index[i], 1);
+                                column[2] = table1.getValueAt(Index[i], 2);
+                                column[3] = table1.getValueAt(Index[i], 3);
+                                column[4] = table1.getValueAt(Index[i], 4);
+                                column[5] = table1.getValueAt(Index[i], 5);
+                                column[6] = table1.getValueAt(Index[i], 6);
+                                column[7] = table1.getValueAt(Index[i], 7);        
 
-    private void TabbedPaneMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TabbedPaneMouseClicked
-        // TODO add your handling code here:
-    }//GEN-LAST:event_TabbedPaneMouseClicked
+                                String insertRows= " insert into parallel(Lecturer, SubjectCode, SubjectName, Tag, GroupId, Room, StartTime, Day)" +" values(?,?,?,?,?,?,?,?)";
+                                pst = conn.prepareStatement(insertRows);
 
-    private void btnViewForParalllel1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewForParalllel1ActionPerformed
-        nonOverlapping nonOverlap = new nonOverlapping();
-        nonOverlap.setVisible(true);
-        this.dispose();
-    }//GEN-LAST:event_btnViewForParalllel1ActionPerformed
+                                   if( column[1].toString().isEmpty())
+                                    {    
+
+                                            pst.setString(1,  column[2].toString());
+                                            pst.setString(2,  column[3].toString());
+                                            pst.setString(3,  column[4].toString());
+                                            pst.setString(4,  column[5].toString());
+                                            pst.setString(5,  column[6].toString());
+                                            pst.setString(6,  column[7].toString());
+                                            pst.setString(7,  cBoxTime.getSelectedItem().toString());
+                                            pst.setString(8,  cBoxDay.getSelectedItem().toString());
+                                            pst.execute(); 
+
+
+                                    }
+                                    else if(column[2].toString().isEmpty()) 
+                                    { 
+                                         pst.setString(1,  column[1].toString());
+                                            pst.setString(2,  column[3].toString());
+                                            pst.setString(3,  column[4].toString());
+                                            pst.setString(4,  column[5].toString());
+                                            pst.setString(5,  column[6].toString());
+                                            pst.setString(6,  column[7].toString());
+                                            pst.setString(7,  cBoxTime.getSelectedItem().toString());
+                                            pst.setString(8,  cBoxDay.getSelectedItem().toString());
+                                            pst.execute(); 
+
+                                    }
+                            }//---for loop end--- 
+                            JOptionPane.showMessageDialog(null,"Parallel Session Successfully Added.");
+                            conn.close(); //---close connection---
+                        }
+                        
+                    }
+                    else //---When Select More than 2 Rows OR 1 row.---
+                    {
+                        JOptionPane.showMessageDialog(null,"Warning!!!, You need to Select more than one row.Because This Consider Only Parallel Sessions");
+                    }
+                    
+                }
+  
+            } catch (SQLException ex) {
+                
+        }
+    }//----End - Add Parallel Sessions----
     
-    //---Start-Non-Overlapping Sessions---
-    private void btnNonOverlapActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNonOverlapActionPerformed
+    //---Start - Non-Overlapping Sessions---
+    public String nonOverlapFun(){
+            String Status = null;
         try {
                 conn = cObj.getConnection();//---get connection---
                 TableModel table1 = tableOfMain_03.getModel();
@@ -583,10 +694,9 @@ public class consecutiveParallelOverlap extends javax.swing.JFrame {
                     JOptionPane.showMessageDialog(null,"Please select Row.");
                 else 
                 {   
-                    if(tableOfMain_03.getSelectedRowCount() >= 1 )
-                    {
+                    if(tableOfMain_03.getSelectedRowCount() >=1 )
+                    {   
                         //---start for loop---
-                        
                         for(int i=0; i<Index.length; i++)
                         {
                             column[0] = table1.getValueAt(Index[i], 0);
@@ -598,82 +708,83 @@ public class consecutiveParallelOverlap extends javax.swing.JFrame {
                             column[6] = table1.getValueAt(Index[i], 6);
                             column[7] = table1.getValueAt(Index[i], 7);
                             
+                            String lec_01 = column[1].toString();
+                            String lec_02 = column[2].toString();
+                            String sCode = column[3].toString();
+                            String tag = column[5].toString();
+                            String gId = column[6].toString();
+                            String room = column[7].toString();
+                        
                             //-----access non-Overlapping DataBase & check already exists------
-                            int insertId = (int)column[0];
-                            String checkQuery = " select * from non_overlap where ID= '"+insertId+"' ";
+                            String checkQuery = " SELECT * FROM non_overlap WHERE Lecturer ='"+lec_01+"' OR Lecturer ='"+lec_02+"' AND SubjectCode = '"+sCode+"' AND Tag='"+tag+"' AND GroupId='"+gId+"' AND Room='"+room+"' ";
                             pst = conn.prepareStatement(checkQuery);
                             rs = pst.executeQuery();
-                            if(rs.next())
+                            if(rs.next()) //---if already exists---
                             {
                                 JOptionPane.showMessageDialog(null,"This Session already exists.");
+                                int response = JOptionPane.showConfirmDialog(null, "Do you want to re-place your selectd row -"+(i+1)+" ?", "Confirm", JOptionPane.YES_NO_OPTION);
+                                if(response == JOptionPane.YES_OPTION)//---if click 'yes' button---
+                                {
+                                    if( column[1].toString().isEmpty())
+                                    {   
+                                        String rePlace = " Update non_overlap Set Lecturer='"+column[2].toString()+"', SubjectCode='"+column[3].toString()+"', SubjectName='"+column[4].toString()
+                                            +"', Tag='"+column[5].toString()+"', GroupId='"+column[6].toString()+"', Room='"+column[7].toString()+"' Where Lecturer='"+column[2].toString()+"' AND SubjectCode='"+column[3].toString()
+                                                +"' AND Tag='"+column[5].toString()+"' AND GroupId='"+column[6].toString()+"'AND Room='"+column[7].toString()+"' ";
+                                        pst = conn.prepareStatement(rePlace);
+                                        pst.executeUpdate();
+                                    }
+                                    else if(column[2].toString().isEmpty()) 
+                                    { 
+                                        String rePlace = " Update non_overlap Set Lecturer='"+column[1].toString()+"', SubjectCode='"+column[3].toString()+"', SubjectName='"+column[4].toString()
+                                            +"', Tag='"+column[5].toString()+"', GroupId='"+column[6].toString()+"', Room='"+column[7].toString()+"' Where Lecturer='"+column[1].toString()+"' AND SubjectCode='"+column[3].toString()
+                                                +"' AND Tag='"+column[5].toString()+"' AND GroupId='"+column[6].toString()+"'AND Room='"+column[7].toString()+"' ";
+                                        pst = conn.prepareStatement(rePlace);
+                                        pst.executeUpdate();
+                                    }
+                                    Status = "replaced";
+                                }
+                                else
+                                {
+                                    Status = "terminated";
+                                    break;
+                                }
                             }
                             else
                             {
-
-                                String insertRows= " insert into non_overlap(ID, Lecturer_1, Lecturer_1, SubjectCode, SubjectName, Tag, GroupId, Room)" +" values(?,?,?,?,?,?,?,?)";
+                                String insertRows= " insert into non_overlap(Lecturer, SubjectCode, SubjectName, Tag, GroupId, Room)" +" values(?,?,?,?,?,?)";
                                 pst = conn.prepareStatement(insertRows);
+                                if( column[1].toString().isEmpty())
+                                {   
+                                        pst.setString(1, column[2].toString());
+                                        pst.setString(2, column[3].toString());
+                                        pst.setString(3, column[4].toString());
+                                        pst.setString(4, column[5].toString());
+                                        pst.setString(5, column[6].toString());
+                                        pst.setString(6, column[7].toString());
+                                        pst.execute(); 
 
-                                pst.setInt(1, (int) column[0]);
-                                pst.setString(2,  column[1].toString());
-                                pst.setString(3,  column[2].toString());
-                                pst.setString(4,  column[3].toString());
-                                pst.setString(5,  column[4].toString());
-                                pst.setString(6,  column[5].toString());
-                                pst.setString(7,  column[6].toString());
-                                pst.setString(8,  column[7].toString());
-                               
-                                pst.execute(); 
-                                JOptionPane.showMessageDialog(null,"Non-Overlap Session Successfully Added.");
+                                }
+                                else if(column[2].toString().isEmpty()) 
+                                { 
+                                        pst.setString(1, column[1].toString());
+                                        pst.setString(2, column[3].toString());
+                                        pst.setString(3, column[4].toString());
+                                        pst.setString(4, column[5].toString());
+                                        pst.setString(5, column[6].toString());
+                                        pst.setString(6, column[7].toString());
+                                        pst.execute(); 
+                                }
+                            Status = "added";
                             }
-                        }
-                        conn.close();
-                    }
+                        }//---End for loop--- 
+                    } 
+                    conn.close(); //---close connection---
                 }
             }catch(Exception ex){
-                
-                
+            
             }
-    }//GEN-LAST:event_btnNonOverlapActionPerformed
-
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        homeForStudentAndTag home = new homeForStudentAndTag();
-        home.setVisible(true);
-        this.dispose();
-    }//GEN-LAST:event_jButton1ActionPerformed
-    
-    //----get data for Table from sprint_2 table----
-    public void getData()
-    {
-        try {
-            
-            conn = cObj.getConnection();//---get connection---
-            
-            String q_1 = " select * from sprint_2 "; //---Query-01---
-            String q_2 = " select * from day_time "; //---Query-02---
-            
-            pst = conn.prepareStatement(q_1); //---Execute Query-01---
-            pst2 = conn.prepareStatement(q_2); //---Execute Query-02---
-      
-            rs = pst.executeQuery();
-                tableOfMain_01.setModel(DbUtils.resultSetToTableModel(rs));//---tableOfMain_01---
-            rs2 = pst.executeQuery();
-                tableOfMain_02.setModel(DbUtils.resultSetToTableModel(rs2)); //---tableOfMain_02---
-            rs3 = pst.executeQuery();
-                tableOfMain_03.setModel(DbUtils.resultSetToTableModel(rs3)); //---tableOfMain_03---    
-                
-            rs4 = pst2.executeQuery(); //---comboBox---
-                while(rs3.next())
-                {
-                    cBoxDay.addItem(rs4.getString("day"));
-                    cBoxTime.addItem(rs4.getString("time"));
-                }
-            conn.close();  
-        }catch (SQLException ex) {
-            System.err.println("Go to an exception!!!");                              
-            JOptionPane.showConfirmDialog(null, ex.getMessage());
-        }
-        
-    }
+        return Status;
+    }//---End - Non-Overlapping Sessions---
    
     /**
      * @param args the command line arguments

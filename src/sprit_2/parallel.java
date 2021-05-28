@@ -6,10 +6,10 @@
 package sprit_2;
 
 import forConnection.connect;
-import java.awt.Panel;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import javax.swing.JOptionPane;
 import javax.swing.RowFilter;
 import javax.swing.table.DefaultTableModel;
@@ -28,6 +28,7 @@ public class parallel extends javax.swing.JFrame {
     
     public parallel() {
         initComponents();
+        getData();
     }
 
     /**
@@ -57,7 +58,7 @@ public class parallel extends javax.swing.JFrame {
 
             },
             new String [] {
-                "ID", "Lecturer", "Subject Code", "Subject Name", "Tag", "GroupId", "Room", "StartTime", "Day"
+                "ID", "Lecturer", "SubjectCode", "SubjectName", "Tag", "GroupId", "Room", "StartTime", "Day"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -242,7 +243,20 @@ public class parallel extends javax.swing.JFrame {
         tableOfParallel.setRowSorter(sort);
         sort.setRowFilter(RowFilter.regexFilter(search_value));
     }//GEN-LAST:event_txtSerachKeyReleased
+    public void getData(){
+        try {
+                conn = cObj.getConnection(); //---get connection---
+                String q = " select * from  parallel ";
+                pst = conn.prepareStatement(q);
+                rs = pst.executeQuery();
 
+                tableOfParallel.setModel(DbUtils.resultSetToTableModel(rs));
+            
+            }catch (SQLException ex) {
+                System.err.println("Go to an exception!!!");                              
+                JOptionPane.showConfirmDialog(null, ex.getMessage());
+            }
+    }
     /**
      * @param args the command line arguments
      */
